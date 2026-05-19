@@ -123,11 +123,14 @@ RIGHT JOIN sales
 #  use the Psql terminal application to interact with it. Log in by typing the code below into the terminal
 psql --username=freecodecamp --dbname=postgres
 # First thing to do is see what databases are here
+# check reason for code failor = error messgae
+');
 \l
 # Create a new database
 CREATE DATABASE first_database;
 # connect to database to add information
 \c first_database
+\c mario_databbase
 # to display tables of database
 \d
 # create table in a database
@@ -151,6 +154,8 @@ ALTER TABLE second_table DROP COLUMN age;
 DELETE FROM second_table WHERE username='Luigi';
 # delete table
 DROP TABLE second_table;
+# delete database
+DROP DATABASE second_database;
 # rename a column
 ALTER TABLE second_table RENAME COLUMN name TO username;
 # rename a database
