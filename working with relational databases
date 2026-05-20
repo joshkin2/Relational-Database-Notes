@@ -139,6 +139,7 @@ CREATE TABLE first_table();
 \d first_table
 # add column to table and give it data type
 ALTER TABLE first_table ADD COLUMN first_column INT;
+ALTER TABLE characters ADD COLUMN character_id SERIAL;
 ALTER TABLE second_table ADD COLUMN id INT;
 ALTER TABLE more_info ADD COLUMN weight NUMERIC(4, 1);   #has up to four digits and one of them has to be to the right of the decimal.
 ALTER TABLE second_table ADD COLUMN age INT;
@@ -158,6 +159,7 @@ DROP TABLE second_table;
 DROP DATABASE second_database;
 # rename a column
 ALTER TABLE second_table RENAME COLUMN name TO username;
+ALTER TABLE more_info RENAME COLUMN height TO height_in_cm;
 # rename a database
 ALTER DATABASE first_database RENAME TO mario_database;
 # add data to rows in a table
@@ -169,11 +171,13 @@ INSERT INTO characters(name, homeland, favorite_color)
 VALUES('Mario', 'Mushroom Kingdom', 'Red'),
 ('Luigi', 'Mushroom Kingdom', 'Green'),
 ('Peach', 'Mushroom Kingdom', 'Pink');
+# add data to table
 INSERT INTO more_info(birthday,height,weight,character_id) VALUES('1981-07-09', 155, 64.5, 1);
 # view all columns/data in a table, Use an asterisk (*) to denote that you want to see all the columns.
 SELECT * FROM second_table;
 # view specific columns in a table
 SELECT character_id FROM characters;
+SELECT character_id, name FROM characters WHERE name='Toad';  #alternative to using SELECT
 # view multiple columns in a table
 
 # view details of a table
@@ -187,6 +191,7 @@ UPDATE characters SET name='Toad' WHERE favorite_color='Red';     # change name
 SELECT * FROM characters ORDER BY character_id;
 # add primary key
 ALTER TABLE characters ADD PRIMARY KEY(name);
+ALTER TABLE more_info ADD PRIMARY KEY(more_info_id);
 # drop primary key on a column
 ALTER TABLE characters DROP CONSTRAINT characters_pkey;
 # create a column as a foreign key:
@@ -198,13 +203,16 @@ ALTER TABLE more_info ALTER COLUMN character_id SET NOT NULL;
 
 
 
-
+README:
+database = mario_database
+table = characters, more_info
 
 
 
 
 # reconnect to terminal
 psql --username=freecodecamp --dbname=second_database
+psql --username=freecodecamp --dbname=mario_database
 \c second_database
 \d
 
