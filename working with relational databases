@@ -135,6 +135,9 @@ CREATE DATABASE first_database;
 \d
 # create table in a database
 CREATE TABLE first_table();
+# create table in DB with datatype and constraint
+CREATE TABLE sounds(sound_id SERIAL PRIMARY KEY);
+CREATE TABLE actions(action_id SERIAL PRIMARY KEY);
 # view more details about a table
 \d first_table
 # add column to table and give it data type
@@ -173,6 +176,7 @@ VALUES('Mario', 'Mushroom Kingdom', 'Red'),
 ('Peach', 'Mushroom Kingdom', 'Pink');
 # add data to table
 INSERT INTO more_info(birthday,height,weight,character_id) VALUES('1981-07-09', 155, 64.5, 1);
+INSERT INTO sounds(filename, character_id) VALUES('its-a-me.wav', 1);
 # view all columns/data in a table, Use an asterisk (*) to denote that you want to see all the columns.
 SELECT * FROM second_table;
 # view specific columns in a table
@@ -187,26 +191,40 @@ SELECT character_id, name FROM characters WHERE name='Toad';  #alternative to us
 # update/change table values - SET Daisy's favorite_color to Orange. You can use the condition name='Daisy' to change her row.
 UPDATE characters SET favorite_color='Orange' WHERE name='Daisy'; # change color
 UPDATE characters SET name='Toad' WHERE favorite_color='Red';     # change name
-# put order to columns
+# put order to columns to view
 SELECT * FROM characters ORDER BY character_id;
 # add primary key
 ALTER TABLE characters ADD PRIMARY KEY(name);
 ALTER TABLE more_info ADD PRIMARY KEY(more_info_id);
+# composite pkey - create pkey from 2 columns
+ALTER TABLE character_actions ADD PRIMARY KEY(character_id, action_id);
+
 # drop primary key on a column
 ALTER TABLE characters DROP CONSTRAINT characters_pkey;
 # create a column as a foreign key:
 ALTER TABLE more_info ADD COLUMN character_id INT REFERENCES characters(character_id);
+# add column to table, give it INT, NOT NULL and set it as foreign key that references a column
+ALTER TABLE sounds ADD COLUMN character_id INT NOT NULL REFERENCES characters(character_id);
+# set existing column as a foreign key:
+ALTER TABLE character_actions ADD FOREIGN KEY(character_id) REFERENCES characters(character_id);
+# add column to table, add varchar, not null and unique
+ALTER TABLE sounds ADD COLUMN filename VARCHAR(40) NOT NULL UNIQUE;
 # enforce using  UNIQUE constraint to foreign key
 ALTER TABLE more_info ADD UNIQUE(character_id);
 # set column to NOT NULL since you don't want to have a row that is for nobody
 ALTER TABLE more_info ALTER COLUMN character_id SET NOT NULL;
-
-
+# use join comman to see all info from multiple tables using a linked column(keys) = 1-1 relationship
+SELECT * FROM characters FULL JOIN more_info ON characters.character_id = more_info.character_id;
+SELECT * FROM characters FULL JOIN sounds ON characters.character_id = sounds.character_id; = 1-many relationship
+# join three tables
+ SELECT * FROM character_actions FULL JOIN characters ON character_actions.character_id = characters.character_id FULL JOIN actions ON character_actions.action_id = actions.action_id;
 
 README:
 database = mario_database
-table = characters, more_info
-
+table = characters, more_info,sounds, character_actions,actions
+columns = character_id,action_id,action
+primary keys = action_id,character_id
+foreign keys= action_id, character_id
 
 
 
