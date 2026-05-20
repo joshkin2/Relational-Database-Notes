@@ -1,245 +1,989 @@
-# Before you can enter SQL commands, you need to open the psql shell so you can directly interact with the PostgreSQL database. In the command prompt or terminal, enter:Replace username with your username and database_name with the database you want to connect to.
-psql -U <username> -d <database_name>
-# If you have not created your own database yet, PostgreSQL automatically includes a default database called postgres when installed.  use this postgres database to follow along. Once connected, you will see the prompt change to:
-postgres=#
-# create a database named my_database:
+# Start Here
+
+## Connect to PostgreSQL
+
+```sql
+psql -U username -d postgres
+```
+
+## Create a Database
+
+```sql
 CREATE DATABASE my_database;
-# In the interactive psql shell, switch databases with the \c shortcut command followed by the database name. \c command and other shortcut commands (ones with a backslash in front of them) are part of the psql shell and not part of the SQL language itself, so they don't require a semi-colon to complete the command.
+```
+
+## Connect to a Database
+
+```sql
 \c my_database
-# create a table with the CREATE TABLE keywords. standard naming convention for table and column names is snake case, writing words in lowercase and separating them with an underscore (_). example: delivery_orders
+```
+
+---
+
+# Main Project
+
+## Mario Database
+
+The Mario Database project demonstrates:
+
+* One-to-one relationships
+* One-to-many relationships
+* Many-to-many relationships
+* Foreign key constraints
+* SQL joins
+* Data normalization
+
+---
+
+# Example Schema
+
+```sql
+CREATE TABLE characters (
+  character_id SERIAL PRIMARY KEY,
+  name VARCHAR(30) NOT NULL,
+  homeland VARCHAR(50),
+  favorite_color VARCHAR(20)
+);
+```
+
+---
+
+# Learning Reflections
+
+Working on relational databases helped me understand:
+
+* Why data integrity matters
+* How backend systems structure information
+* Why relationships between tables are critical
+* How schema design impacts scalability
+* How efficient queries improve application performance
+* How relational databases support real-world software systems
+
+---
+
+# Future Improvements
+
+* Stored procedures
+* Database views
+* Query optimization
+* Advanced indexing
+* Database backups and restoration
+* Role-based permissions
+
+---
+
+````
+
+---
+
+# setup/postgresql_setup.md
+
+```md id="13v7v8"
+# PostgreSQL Setup
+
+## Connect to PostgreSQL
+
+```sql
+psql -U <username> -d <database_name>
+````
+
+If you do not have a custom database yet, PostgreSQL includes a default database called:
+
+```sql
+postgres
+```
+
+Example:
+
+```sql
+psql -U freecodecamp -d postgres
+```
+
+---
+
+# Useful psql Commands
+
+| Command            | Description              |
+| ------------------ | ------------------------ |
+| `\l`               | List all databases       |
+| `\c database_name` | Connect to database      |
+| `\d`               | Show all tables          |
+| `\d table_name`    | Describe table structure |
+
+---
+
+# Create a Database
+
+```sql
+CREATE DATABASE my_database;
+```
+
+---
+
+# Connect to a Database
+
+```sql
+\c my_database
+```
+
+---
+
+# Delete a Database
+
+```sql
+DROP DATABASE my_database;
+```
+
+````
+
+---
+
+# fundamentals/creating_tables.md
+
+```md id="5k3lf4"
+# Creating Tables
+
+## Basic Table Structure
+
+```sql
+CREATE TABLE table_name(
+  column1 data_type constraint,
+  column2 data_type constraint
+);
+````
+
+---
+
+# Example
+
+```sql
 CREATE TABLE products (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(255)
 );
-# To define a table in SQL, you need to specify the data type of each column.
-CREATE TABLE table_name(
-  column1 data_type column_constraint,
-  column2 data_type column_constraint,
-  column3 data_type column_constraint,
-  ... etc
-);
-# There are six popular categories of data types in SQL: 1.Numeric, such as INTEGER, FLOAT, SERIAL, and DECIMAL. 2.Date and time, such as TIMESTAMP, DATE, and TIME. 3.Character and string. These include CHAR, VARCHAR, and TEXT. 4.Unicode, including NTEXT, and NVARCHAR. These are used to make sure that text will be stored and retrieved correctly, regardless of the characters' origin. 5.Binary, used to store non-textual data, like images, audio, and video files. 6.And other miscellaneous data types, such as XML and TABLE.
+```
 
-# assign this data type to a units_sold column.
+---
+
+# Snake Case Naming Convention
+
+Use lowercase words separated by underscores.
+
+Example:
+
+```sql
+delivery_orders
+```
+
+---
+
+# Add Columns to Existing Tables
+
+```sql
+ALTER TABLE products
+ADD COLUMN price NUMERIC(5,2);
+```
+
+---
+
+# Rename Columns
+
+```sql
+ALTER TABLE products
+RENAME COLUMN price TO product_price;
+```
+
+---
+
+# Remove Columns
+
+```sql
+ALTER TABLE products
+DROP COLUMN product_price;
+```
+
+---
+
+# Delete Tables
+
+```sql
+DROP TABLE products;
+```
+
+````
+
+---
+
+# fundamentals/data_types.md
+
+```md id="s2l7ee"
+# SQL Data Types
+
+## Numeric Types
+
+```sql
+INTEGER
+FLOAT
+SERIAL
+DECIMAL
+NUMERIC
+````
+
+---
+
+# Character Types
+
+```sql
+VARCHAR(50)
+TEXT
+CHAR
+```
+
+---
+
+# Date and Time Types
+
+```sql
+DATE
+TIME
+TIMESTAMP
+TIMESTAMP WITH TIME ZONE
+```
+
+---
+
+# Boolean Type
+
+```sql
+BOOLEAN
+```
+
+---
+
+# Examples
+
+```sql
 units_sold INTEGER
-# A useful feature available in PostgreSQL is to create a column using the SERIAL keyword. While it's not a true data type, it's very helpful for creating unique identifier columns because the column will have an INTEGER type, will not allow NULL values, and automatically increment when rows are added.
-id SERIAL
-# In MySQL, the equivalent of SERIAL would be the <AUTO_INCREMENT> attribute, used to generate sequential integers automatically:
-id INT AUTO_INCREMENT
-# VARCHAR data type. This data type is used for a variable string length. You can set the maximum character length within parentheses:
-name VARCHAR(50)
-# if you need to store strings of any length, you can use TEXT instead:
-name TEXT
-# if you create a table to store events, you may need to store the date of each event in a specific format:
-event_date DATE
-# you may store the time when an event starts:
-start_time TIME
-# The TIMESTAMP data type combines both of them. It may also include the time zone if you write TIMESTAMP WITH TIME ZONE:
-event_timestamp TIMESTAMP
-event_timestamp TIMESTAMP WITH TIME ZONE
-# if you need to store a boolean value, TRUE or FALSE:
-is_active BOOLEAN
 
-# to view data, you need to insert it. The examples below will be based on this table of dog records:
+name VARCHAR(50)
+
+event_date DATE
+
+start_time TIME
+
+event_timestamp TIMESTAMP
+
+is_active BOOLEAN
+```
+
+---
+
+# SERIAL in PostgreSQL
+
+```sql
+id SERIAL
+```
+
+SERIAL automatically:
+
+* Creates an integer column
+* Prevents NULL values
+* Auto increments values
+
+---
+
+# MySQL Equivalent
+
+```sql
+id INT AUTO_INCREMENT
+```
+
+````
+
+---
+
+# fundamentals/inserting_data.md
+
+```md id="lkjlwm"
+# Inserting Data
+
+## Create Example Table
+
+```sql
 CREATE TABLE dogs(
   id SERIAL,
   name VARCHAR(100),
   age INTEGER
 );
-# inserting a dog record with the name of 'Gino', whose age is 3, id will be assigned automatically. 'Gino' needs to be in single quotes because it is a VARCHAR type.
+````
+
+---
+
+# Insert One Row
+
+```sql
 INSERT INTO dogs (name, age)
 VALUES ('Gino', 3);
-#  insert multiple records in the same SQL command by separating them with a comma.
+```
+
+---
+
+# Insert Multiple Rows
+
+```sql
 INSERT INTO dogs (name, age)
 VALUES
   ('Gino', 3),
   ('Nora', 2);
-# In SQL, the SELECT statement is used for querying data from one or more tables. the asterisk is a wildcard character that represents "all columns."
+```
+
+---
+
+# Insert Data into Mario Database
+
+```sql
+INSERT INTO characters(name, homeland, favorite_color)
+VALUES
+('Mario', 'Mushroom Kingdom', 'Red'),
+('Luigi', 'Mushroom Kingdom', 'Green'),
+('Peach', 'Mushroom Kingdom', 'Pink');
+```
+
+````
+
+---
+
+# fundamentals/querying_data.md
+
+```md id="b7f9i6"
+# Querying Data
+
+## Select All Columns
+
+```sql
 SELECT *
 FROM dogs;
-# To query specific columns
+````
+
+---
+
+# Select Specific Columns
+
+```sql
 SELECT name, age
 FROM dogs;
-#  to query data based on a specific condition
+```
+
+---
+
+# Filter Data with WHERE
+
+```sql
 SELECT *
 FROM dogs
 WHERE age < 3;
-# another conditional example
+```
+
+---
+
+# Another Example
+
+```sql
 SELECT age
 FROM dogs
 WHERE name = 'Gino';
-# In PostgreSQL, to make a column the primary key of a table, add PRIMARY KEY after the data type:
-column_name data_type PRIMARY KEY
-# more example on the above
+```
+
+---
+
+# Order Results
+
+```sql
+SELECT *
+FROM characters
+ORDER BY character_id;
+```
+
+---
+
+# Aggregate Functions
+
+## COUNT()
+
+```sql
+SELECT COUNT(*)
+FROM characters;
+```
+
+## AVG()
+
+```sql
+SELECT AVG(weight)
+FROM more_info;
+```
+
+## GROUP BY
+
+```sql
+SELECT favorite_color, COUNT(*)
+FROM characters
+GROUP BY favorite_color;
+```
+
+````
+
+---
+
+# fundamentals/updating_and_deleting.md
+
+```md id="9woxw0"
+# Updating and Deleting Data
+
+## Update Existing Rows
+
+```sql
+UPDATE characters
+SET favorite_color='Orange'
+WHERE name='Daisy';
+````
+
+---
+
+# Another Update Example
+
+```sql
+UPDATE characters
+SET name='Toad'
+WHERE favorite_color='Red';
+```
+
+---
+
+# Delete Specific Rows
+
+```sql
+DELETE FROM second_table
+WHERE username='Luigi';
+```
+
+---
+
+# Delete Entire Table
+
+```sql
+DROP TABLE second_table;
+```
+
+````
+
+---
+
+# fundamentals/constraints_and_keys.md
+
+```md id="9m8m4u"
+# Constraints and Keys
+
+## Primary Key
+
+```sql
 CREATE TABLE students (
   student_id SERIAL PRIMARY KEY,
   name VARCHAR(100)
 );
+````
 
-# Imagine you have a table with student_id and course_id columns that tells you what students are enrolled in various classes. Each student will be enrolled in several classes, and each class will have several students enrolled in it. So neither column is unique - but you will never have the same student enrolled in the same class more than once. So you can use the combination of the two columns as the primary key. Primary keys are essential for ensuring data uniqueness and integrity, for optimizing data retrieval, and for establishing relationships with other tables in a relational database.
+Primary keys:
+
+* Must be unique
+* Cannot contain NULL values
+
+---
+
+# Composite Primary Key
+
+```sql
 CREATE TABLE course_enrollments (
   student_id INT,
   course_id INT,
-  ...
-  PRIMARY KEY (student_id, course_id),
+  PRIMARY KEY(student_id, course_id)
 );
+```
 
-# A foreign key is a column (or set of columns) in a table that references the primary key of another table. A table can have multiple foreign keys.
-CREATE TABLE customers (
-  customer_id SERIAL PRIMARY KEY,
-  first_name VARCHAR(100) NOT NULL,
-  ...
-);
+---
+
+# Foreign Key
+
+```sql
 CREATE TABLE orders (
   order_id SERIAL PRIMARY KEY,
   customer_id INTEGER,
-  ...
-  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+  FOREIGN KEY (customer_id)
+  REFERENCES customers(customer_id)
 );
+```
 
-# We can perform an INNER JOIN like this:  it gives you the intersection of the data
+---
+
+# UNIQUE Constraint
+
+```sql
+ALTER TABLE sounds
+ADD COLUMN filename VARCHAR(40) NOT NULL UNIQUE;
+```
+
+---
+
+# NOT NULL Constraint
+
+```sql
+ALTER TABLE more_info
+ALTER COLUMN character_id
+SET NOT NULL;
+```
+
+````
+
+---
+
+# relationships/joins.md
+
+```md id="2up76v"
+# SQL Joins
+
+## INNER JOIN
+
+Returns matching rows from both tables.
+
+```sql
 SELECT *
 FROM products
 INNER JOIN sales
-  ON products.product_id = sales.product_id;
-# A FULL OUTER JOIN returns all rows from both tables
+ON products.product_id = sales.product_id;
+````
+
+---
+
+# FULL OUTER JOIN
+
+Returns all rows from both tables.
+
+```sql
 SELECT *
 FROM products
 FULL OUTER JOIN sales
-  ON products.product_id = sales.product_id;
-# A LEFT OUTER JOIN is used to get all the records from the left table and the matching information from the right table for each row of the left table.
+ON products.product_id = sales.product_id;
+```
+
+---
+
+# LEFT JOIN
+
+Returns all rows from the left table.
+
+```sql
 SELECT *
 FROM products
 LEFT JOIN sales
-  ON products.product_id = sales.product_id;
-# A RIGHT OUTER JOIN is very similar
+ON products.product_id = sales.product_id;
+```
+
+---
+
+# RIGHT JOIN
+
+Returns all rows from the right table.
+
+```sql
 SELECT *
 FROM products
 RIGHT JOIN sales
-  ON products.product_id = sales.product_id;
+ON products.product_id = sales.product_id;
+```
 
+---
 
-# LESSON: Building a Database of Video Game Characters
-#  use the Psql terminal application to interact with it. Log in by typing the code below into the terminal
-psql --username=freecodecamp --dbname=postgres
-# First thing to do is see what databases are here
-# check reason for code failor = error messgae
-');
-\l
-# Create a new database
-CREATE DATABASE first_database;
-# connect to database to add information
-\c first_database
-\c mario_databbase
-# to display tables of database
-\d
-# create table in a database
-CREATE TABLE first_table();
-# create table in DB with datatype and constraint
-CREATE TABLE sounds(sound_id SERIAL PRIMARY KEY);
-CREATE TABLE actions(action_id SERIAL PRIMARY KEY);
-# view more details about a table
-\d first_table
-# add column to table and give it data type
-ALTER TABLE first_table ADD COLUMN first_column INT;
-ALTER TABLE characters ADD COLUMN character_id SERIAL;
-ALTER TABLE second_table ADD COLUMN id INT;
-ALTER TABLE more_info ADD COLUMN weight NUMERIC(4, 1);   #has up to four digits and one of them has to be to the right of the decimal.
-ALTER TABLE second_table ADD COLUMN age INT;
-# add column with string characters; 30 mx length
-ALTER TABLE second_table ADD COLUMN name VARCHAR(30);
-# add column with string characters; 30 mx length and not null constraint
-ALTER TABLE characters ADD COLUMN name VARCHAR(30) NOT NULL;
-# Delete database
-DROP DATABASE first_databse;
-# How to remove columns
-ALTER TABLE second_table DROP COLUMN age;
-# delete data in a row
-DELETE FROM second_table WHERE username='Luigi';
-# delete table
-DROP TABLE second_table;
-# delete database
-DROP DATABASE second_database;
-# rename a column
-ALTER TABLE second_table RENAME COLUMN name TO username;
-ALTER TABLE more_info RENAME COLUMN height TO height_in_cm;
-# rename a database
-ALTER DATABASE first_database RENAME TO mario_database;
-# add data to rows in a table
-INSERT INTO second_table(id, username) VALUES(1,'Samus');
-# add multiple entries to rows
-INSERT INTO characters(character_id, name, homeland, favorite_color) VALUES(1, 'Mario', 'Mushroom Kingdom', 'Red');
-# add three rows at once:
+# Join Three Tables
+
+```sql
+SELECT *
+FROM character_actions
+FULL JOIN characters
+ON character_actions.character_id = characters.character_id
+FULL JOIN actions
+ON character_actions.action_id = actions.action_id;
+```
+
+````
+
+---
+
+# relationships/one_to_one.md
+
+```md id="4w6r0x"
+# One-to-One Relationships
+
+A one-to-one relationship means:
+
+- One record matches exactly one other record
+
+Example:
+
+- One character has one profile
+
+---
+
+# Example
+
+```sql
+CREATE TABLE more_info (
+  more_info_id SERIAL PRIMARY KEY,
+  birthday DATE,
+  height NUMERIC(4,1),
+  weight NUMERIC(4,1),
+  character_id INT UNIQUE REFERENCES characters(character_id)
+);
+````
+
+````
+
+---
+
+# relationships/one_to_many.md
+
+```md id="7fwh1r"
+# One-to-Many Relationships
+
+A one-to-many relationship means:
+
+- One record can relate to many records
+
+Example:
+
+- One character can have many sounds
+
+---
+
+# Example
+
+```sql
+CREATE TABLE sounds (
+  sound_id SERIAL PRIMARY KEY,
+  filename VARCHAR(40),
+  character_id INT REFERENCES characters(character_id)
+);
+````
+
+````
+
+---
+
+# relationships/many_to_many.md
+
+```md id="skf3sy"
+# Many-to-Many Relationships
+
+A many-to-many relationship means:
+
+- One record can connect to many records
+- Those records can also connect back
+
+Example:
+
+- A character can perform many actions
+- An action can belong to many characters
+
+---
+
+# Example
+
+```sql
+CREATE TABLE character_actions (
+  character_id INT REFERENCES characters(character_id),
+  action_id INT REFERENCES actions(action_id),
+  PRIMARY KEY(character_id, action_id)
+);
+````
+
+````
+
+---
+
+# projects/mario_database/mario_database_schema.sql
+
+```sql id="fxcxls"
+CREATE TABLE characters (
+  character_id SERIAL PRIMARY KEY,
+  name VARCHAR(30) NOT NULL,
+  homeland VARCHAR(50),
+  favorite_color VARCHAR(20)
+);
+
+CREATE TABLE more_info (
+  more_info_id SERIAL PRIMARY KEY,
+  birthday DATE,
+  height NUMERIC(4,1),
+  weight NUMERIC(4,1),
+  character_id INT UNIQUE NOT NULL
+  REFERENCES characters(character_id)
+);
+
+CREATE TABLE sounds (
+  sound_id SERIAL PRIMARY KEY,
+  filename VARCHAR(40) NOT NULL UNIQUE,
+  character_id INT NOT NULL
+  REFERENCES characters(character_id)
+);
+
+CREATE TABLE actions (
+  action_id SERIAL PRIMARY KEY,
+  action VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE character_actions (
+  character_id INT REFERENCES characters(character_id),
+  action_id INT REFERENCES actions(action_id),
+  PRIMARY KEY(character_id, action_id)
+);
+````
+
+---
+
+# projects/mario_database/mario_database_queries.sql
+
+```sql id="3k1mfu"
 INSERT INTO characters(name, homeland, favorite_color)
-VALUES('Mario', 'Mushroom Kingdom', 'Red'),
+VALUES
+('Mario', 'Mushroom Kingdom', 'Red'),
 ('Luigi', 'Mushroom Kingdom', 'Green'),
 ('Peach', 'Mushroom Kingdom', 'Pink');
-# add data to table
-INSERT INTO more_info(birthday,height,weight,character_id) VALUES('1981-07-09', 155, 64.5, 1);
-INSERT INTO sounds(filename, character_id) VALUES('its-a-me.wav', 1);
-# view all columns/data in a table, Use an asterisk (*) to denote that you want to see all the columns.
-SELECT * FROM second_table;
-# view specific columns in a table
-SELECT character_id FROM characters;
-SELECT character_id, name FROM characters WHERE name='Toad';  #alternative to using SELECT
-# view multiple columns in a table
 
-# view details of a table
-\d characters
-# view tables in a database
+SELECT *
+FROM characters;
+
+SELECT *
+FROM characters
+ORDER BY character_id;
+
+SELECT *
+FROM characters
+FULL JOIN sounds
+ON characters.character_id = sounds.character_id;
+```
+
+---
+
+# advanced/indexing.md
+
+````md id="8m4xcz"
+# Indexing
+
+Indexes improve query performance by speeding up searches.
+
+---
+
+# Create an Index
+
+```sql
+CREATE INDEX idx_character_name
+ON characters(name);
+````
+
+---
+
+# Why Indexes Matter
+
+Indexes help databases:
+
+* Search faster
+* Reduce query execution time
+* Improve scalability
+
+---
+
+# Tradeoffs
+
+Indexes improve reads but can slightly slow down:
+
+* INSERT operations
+* UPDATE operations
+* DELETE operations
+
+````
+
+---
+
+# advanced/transactions.md
+
+```md id="cx1h0n"
+# Transactions
+
+Transactions ensure database consistency.
+
+---
+
+# Example
+
+```sql
+BEGIN;
+
+UPDATE characters
+SET favorite_color='Blue'
+WHERE name='Mario';
+
+COMMIT;
+````
+
+---
+
+# Rollback Example
+
+```sql
+BEGIN;
+
+DELETE FROM characters
+WHERE name='Luigi';
+
+ROLLBACK;
+```
+
+---
+
+# Why Transactions Matter
+
+Transactions help maintain:
+
+* Data integrity
+* Reliability
+* Consistency
+
+````
+
+---
+
+# advanced/normalization.md
+
+```md id="0bdz8h"
+# Database Normalization
+
+Normalization helps organize data efficiently.
+
+---
+
+# First Normal Form (1NF)
+
+Rules:
+
+- No repeating groups
+- Each column stores atomic values
+
+---
+
+# Second Normal Form (2NF)
+
+Rules:
+
+- Must satisfy 1NF
+- Remove partial dependencies
+
+---
+
+# Third Normal Form (3NF)
+
+Rules:
+
+- Must satisfy 2NF
+- Remove transitive dependencies
+
+---
+
+# Benefits of Normalization
+
+- Reduces duplicate data
+- Improves consistency
+- Makes databases easier to maintain
+````
+
+---
+
+# cheatsheets/postgresql_cheatsheet.md
+
+````md id="0h3n4k"
+# PostgreSQL Cheat Sheet
+
+## Database Commands
+
+```sql
+\l
+\c database_name
 \d
-# update/change table values - SET Daisy's favorite_color to Orange. You can use the condition name='Daisy' to change her row.
-UPDATE characters SET favorite_color='Orange' WHERE name='Daisy'; # change color
-UPDATE characters SET name='Toad' WHERE favorite_color='Red';     # change name
-# put order to columns to view
-SELECT * FROM characters ORDER BY character_id;
-# add primary key
-ALTER TABLE characters ADD PRIMARY KEY(name);
-ALTER TABLE more_info ADD PRIMARY KEY(more_info_id);
-# composite pkey - create pkey from 2 columns
-ALTER TABLE character_actions ADD PRIMARY KEY(character_id, action_id);
+\d table_name
+````
 
-# drop primary key on a column
-ALTER TABLE characters DROP CONSTRAINT characters_pkey;
-# create a column as a foreign key:
-ALTER TABLE more_info ADD COLUMN character_id INT REFERENCES characters(character_id);
-# add column to table, give it INT, NOT NULL and set it as foreign key that references a column
-ALTER TABLE sounds ADD COLUMN character_id INT NOT NULL REFERENCES characters(character_id);
-# set existing column as a foreign key:
-ALTER TABLE character_actions ADD FOREIGN KEY(character_id) REFERENCES characters(character_id);
-# add column to table, add varchar, not null and unique
-ALTER TABLE sounds ADD COLUMN filename VARCHAR(40) NOT NULL UNIQUE;
-# enforce using  UNIQUE constraint to foreign key
-ALTER TABLE more_info ADD UNIQUE(character_id);
-# set column to NOT NULL since you don't want to have a row that is for nobody
-ALTER TABLE more_info ALTER COLUMN character_id SET NOT NULL;
-# use join comman to see all info from multiple tables using a linked column(keys) = 1-1 relationship
-SELECT * FROM characters FULL JOIN more_info ON characters.character_id = more_info.character_id;
-SELECT * FROM characters FULL JOIN sounds ON characters.character_id = sounds.character_id; = 1-many relationship
-# join three tables
- SELECT * FROM character_actions FULL JOIN characters ON character_actions.character_id = characters.character_id FULL JOIN actions ON character_actions.action_id = actions.action_id;
+---
 
-README:
-database = mario_database
-table = characters, more_info,sounds, character_actions,actions
-columns = character_id,action_id,action
-primary keys = action_id,character_id
-foreign keys= action_id, character_id
+# Create Database
 
+```sql
+CREATE DATABASE my_database;
+```
 
+---
 
-# reconnect to terminal
-psql --username=freecodecamp --dbname=second_database
-psql --username=freecodecamp --dbname=mario_database
-\c second_database
-\d
+# Create Table
 
+```sql
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  username VARCHAR(50)
+);
+```
 
+---
 
+# Insert Data
 
+```sql
+INSERT INTO users(username)
+VALUES('admin');
+```
 
+---
 
+# Query Data
 
+```sql
+SELECT * FROM users;
+```
 
+---
 
+# Update Data
 
+```sql
+UPDATE users
+SET username='administrator'
+WHERE user_id=1;
+```
+
+---
+
+# Delete Data
+
+```sql
+DELETE FROM users
+WHERE user_id=1;
+```
+
+---
+
+# Joins
+
+```sql
+INNER JOIN
+LEFT JOIN
+RIGHT JOIN
+FULL OUTER JOIN
+```
+
+```
+```
