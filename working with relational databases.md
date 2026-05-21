@@ -1002,6 +1002,10 @@ CREATE TABLE Statement: This statement is used to create a new table in a databa
 ```sql
 CREATE TABLE first_table();
 ```
+Delete a column from a table in SQL
+```sql
+ALTER TABLE table_name DROP COLUMN column_name;
+```
 ALTER TABLE ADD COLUMN Statement: This statement is used to add a column to an existing table.
 ```sql
 ALTER TABLE table_name ADD COLUMN column_name DATATYPE;
