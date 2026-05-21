@@ -76,11 +76,6 @@ Working on relational databases helped me understand:
 
 ---
 
-# setup/postgresql_setup.md
-
-```md id="13v7v8"
-# PostgreSQL Setup
-
 ## Connect to PostgreSQL
 
 ```sql
@@ -988,14 +983,22 @@ FULL OUTER JOIN
 ---
 
 # SQL Basics
+
+---
+## Queries: Requests to retrieve specific data from the database.
+---
 ```sql
-Queries: Requests to retrieve specific data from the database.
 SELECT * FROM dogs WHERE age < 3;
-WHERE clause: Filter results based on conditions. Use comparison operators like <, =, >, etc.
-Select with ORDER BY: Retrieve and sort results based on a column.
+```
+* WHERE clause: Filter results based on conditions. Use comparison operators like <, =, >, etc.
+## Select with ORDER BY: Retrieve and sort results based on a column.
+```sql
 SELECT columns FROM table_name ORDER BY column_name;
-Table Operations
+```
+## Table Operations
+```sql
 CREATE TABLE Statement: This statement is used to create a new table in a database.
+```
 CREATE TABLE first_table();
 ALTER TABLE ADD COLUMN Statement: This statement is used to add a column to an existing table.
 ALTER TABLE table_name ADD COLUMN column_name DATATYPE;
